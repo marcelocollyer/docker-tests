@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  python-http-server:
+    image: marcelocollyer/python-http-server:latest
+    restart: always
+    build:
+      context: python
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: curl --fail http://localhost:8000/ || exit 1
+      interval: 5s
+      timeout: 30s
+      retries: 5
+
+  node-http-server:
+    image: marcelocollyer/node-http-server:latest
+    restart: always
+    build:
+      context: node
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: curl --fail http://localhost:3000/ || exit 1
+      interval: 5s
+      timeout: 1m30s
+      retries: 5
+    depends_on:
+      python-http-server:
+        condition: service_healthy             
+
+  go-http-server:
+    image: marcelocollyer/go-http-server:latest
+    restart: always
+    build:
+      context: golang
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: curl --fail http://localhost:8080/ || exit 1
+      interval: 5s
+      timeout: 1m30s
+      retries: 5 
+    depends_on:
+      node-http-server:
+        condition: service_healthy

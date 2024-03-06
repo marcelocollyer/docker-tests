@@ -2,17 +2,20 @@ FROM python:3.9 as builder
 
 WORKDIR /app
 
-COPY server.py .
+COPY main.py requirements.txt ./
 
-FROM python:3.9-alpine
+RUN pip install --no-cache-dir -r requirements.txt
+
+FROM python:3.9-slim
 
 WORKDIR /app
 
-COPY --from=builder /app/server.py .
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+COPY --from=builder /app/main.py .
 
-RUN apk add --update curl && \
-    rm -rf /var/cache/apk/*
+RUN apt update && \
+    apt install curl -y
 
 EXPOSE 8000
 
-CMD ["python", "server.py"]
+CMD ["python", "main.py"]

@@ -1,12 +1,8 @@
 {
-  "name": "node",
+  "name": "node-http-server",
   "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "keywords": [],
-  "description": ""
+  "description": "A simple Node.js HTTP server example",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }

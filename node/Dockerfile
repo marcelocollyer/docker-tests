@@ -1,19 +1,21 @@
-FROM node:21 as builder
+FROM node:21 AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package*.json server.js ./
 
 RUN npm install
 
-COPY . .
-
-FROM node:21-alpine
+FROM node:21-slim
 
 WORKDIR /app
 
-COPY --from=builder /app .
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/server.js .
 
-EXPOSE 8001
+RUN apt update && \
+    apt install -y curl
+
+EXPOSE 3000
 
 CMD ["node", "server.js"]

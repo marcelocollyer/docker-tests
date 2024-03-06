@@ -1,2 +1,2 @@
 # docker-tests
-Docker compose simples configuration
+Docker compose simple configuration used in most common projects
